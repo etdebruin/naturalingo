@@ -1,2 +1,4 @@
-.rvm
-.rbx
+*.gem
+.bundle
+Gemfile.lock
+pkg/*
