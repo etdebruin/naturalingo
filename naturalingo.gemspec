@@ -7,9 +7,9 @@ Gem::Specification.new do |s|
   s.version     = Naturalingo::VERSION
   s.authors     = ["Etienne de Bruin"]
   s.email       = ["et@d.ebru.in"]
-  s.homepage    = ""
-  s.summary     = %q{This is my summary}
-  s.description = %q{This is my description}
+  s.homepage    = "http://d.ebru.in/"
+  s.summary     = %q{Naturalingo is for natural linguistics}
+  s.description = %q{Machine learning for language like my 2 years old learns language}
 
   s.rubyforge_project = "naturalingo"
 
@@ -20,5 +20,5 @@ Gem::Specification.new do |s|
 
   # specify any dependencies here; for example:
   # s.add_development_dependency "rspec"
-  # s.add_runtime_dependency "rest-client"
+  s.add_runtime_dependency "redis"
 end
