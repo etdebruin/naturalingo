@@ -4,7 +4,7 @@ require "redis"
 module Natural
   
   class Lingo
-    attr_reader :heard, :talking_to_me
+    attr_reader :heard, :heard_these_words, :talking_to_me
 
     def initialize(names)
       @names ||= names
@@ -21,9 +21,10 @@ module Natural
     end
 
     def analyze
-      # process each sentence at a time
+      @heard_these_words = Array.new
       @heard.split(/[\.!]/).each do |sentence|
         sentence.split(' ').each do |word|
+          @heard_these_words << word
           remember(word, sentence)
           recognize(word)
         end
