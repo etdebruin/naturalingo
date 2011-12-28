@@ -1,27 +1,53 @@
 require "naturalingo/version"
 require "redis"
 
-module Naturalingo
-  extend self
+module Natural
+  
+  class Lingo
+    attr_reader :heard, :talking_to_me
 
-  def heard(sentences)
-    remember(sentences)
-    return sentences
-  end
+    def initialize(names)
+      @names ||= names
+      @talking_to_me = false
+    end
 
-  def remember(sentences)
-    # process each sentence at a time
-    sentences.split(/[\.!]/).each do |sentence|
-      sentence.split(' ').each do |word|
-        $redis.sadd('nl:#{word}', sentence)
+    def heard=sentences
+      @heard ||= sentences
+      analyze
+    end
+
+    def talking_to_me?
+      return @talking_to_me
+    end
+
+    def analyze
+      # process each sentence at a time
+      @heard.split(/[\.!]/).each do |sentence|
+        sentence.split(' ').each do |word|
+          remember(word, sentence)
+          recognize(word)
+        end
       end
     end
-  end
 
-  def list(word)
-    $redis.smembers(word) do |sentence|
-      puts sentence
+    def recognize(word)
+      # name
+      if @names.index word 
+        @talking_to_me = true
+      end
+
     end
+
+    def remember(word, sentence)
+      $redis.sadd("nl:#{word}", sentence)
+    end
+
+    def list(word)
+      $redis.smembers(word) do |sentence|
+        puts sentence
+      end
+    end
+
   end
 
 end
