@@ -2,28 +2,29 @@ require "naturalingo/version"
 require "redis"
 
 module Naturalingo
+  extend self
 
-  def self.heard(sentences)
+  def heard(sentences)
+    remember(sentences)
+    return sentences
+  end
+
+  def remember(sentences)
     # process each sentence at a time
     sentences.split(/[\.!]/).each do |sentence|
-      # break down each sentence into words
-      puts "sentence = #{sentence}"
       sentence.split(' ').each do |word|
-        puts "word = #{word}"
-        $redis.sadd(word, sentence)
+        $redis.sadd('nl:#{word}', sentence)
       end
-
-
-      # send to the "Brain"
     end
+  end
 
-    return nil
-
+  def list(word)
+    $redis.smembers(word) do |sentence|
+      puts sentence
+    end
   end
 
 end
 
 $redis = Redis.new
 $redis = Redis.new(:host => "127.0.0.1", :port => 6379)
-
-Naturalingo::heard("Hi my name is Etienne!")
